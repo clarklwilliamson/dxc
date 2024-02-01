@@ -65,6 +65,20 @@ resource "aws_security_group" "dxc_security_group" {
 resource "aws_default_security_group" "default" {
   vpc_id = aws_vpc.dxc_vpc.id
 }
+resource "aws_route_table_association" "gw_association" {
+  subnet_id      = aws_subnet.dxc_subnet1.id
+  route_table_id = aws_vpc.dxc_vpc.default_route_table_id
+}
+
+resource "aws_default_route_table" "dxc_vpc" {
+  default_route_table_id = aws_vpc.dxc_vpc.default_route_table_id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.dxc_igw.id
+  }
+}
+
 resource "aws_ecs_cluster" "dxc_demo_cluster" {
   name = "dxc-demo"
 }
@@ -113,7 +127,7 @@ resource "aws_ecs_service" "nginx_service" {
   }
   load_balancer {
     target_group_arn = aws_lb_target_group.dxc_target_group.arn
-    container_name   = "dxcdemo"
+    container_name   = "clark-dxc"
     container_port   = 80
   }
 
