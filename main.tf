@@ -62,6 +62,9 @@ resource "aws_security_group" "dxc_security_group" {
     Name = "dxc-security-group"
   }
 }
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_vpc.dxc_vpc.id
+}
 resource "aws_ecs_cluster" "dxc_demo_cluster" {
   name = "dxc-demo"
 }
@@ -106,12 +109,12 @@ resource "aws_ecs_service" "nginx_service" {
 
   network_configuration {
     subnets         = [aws_subnet.dxc_subnet1.id, aws_subnet.dxc_subnet2.id]
-    security_groups = [aws_security_group.dxc_security_group.id]
+    security_groups = [aws_security_group.dxc_security_group.id, aws_default_security_group.default.id]
   }
   load_balancer {
     target_group_arn = aws_lb_target_group.dxc_target_group.arn
-    container_name = "dxcdemo"
-    container_port = 80
+    container_name   = "dxcdemo"
+    container_port   = 80
   }
 
   depends_on = [aws_ecs_cluster.dxc_demo_cluster]
