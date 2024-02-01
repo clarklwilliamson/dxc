@@ -52,9 +52,9 @@ resource "aws_security_group" "dxc_security_group" {
   }
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -108,6 +108,11 @@ resource "aws_ecs_service" "nginx_service" {
     subnets         = [aws_subnet.dxc_subnet1.id, aws_subnet.dxc_subnet2.id]
     security_groups = [aws_security_group.dxc_security_group.id]
   }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.dxc_target_group.arn
+    container_name = "dxcdemo"
+    container_port = 80
+  }
 
   depends_on = [aws_ecs_cluster.dxc_demo_cluster]
 }
@@ -138,9 +143,3 @@ resource "aws_lb_listener" "dxcdemo_listener" {
     type             = "forward"
   }
 }
-
-#resource "aws_lb_target_group_attachment" "dxc_target_attachment" {
-#  target_group_arn = aws_lb_target_group.dxc_target_group.arn
-#  target_id        = aws_ecs_service.nginx_service.network_configuration.[0].id
-#  port             = 80
-#}
