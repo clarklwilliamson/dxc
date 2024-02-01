@@ -89,7 +89,7 @@ resource "aws_ecs_task_definition" "dxcdemo" {
         }
         secretOptions = []
       }
-      name  = "dxcdemo"
+      name  = "clark-dxc"
       image = "public.ecr.aws/k9n9g5s7/clark-dxc"
       portMappings = [
         {
