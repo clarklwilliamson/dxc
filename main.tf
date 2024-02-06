@@ -124,6 +124,8 @@ resource "aws_ecs_service" "nginx_service" {
   network_configuration {
     subnets         = [aws_subnet.dxc_subnet1.id, aws_subnet.dxc_subnet2.id]
     security_groups = [aws_security_group.dxc_security_group.id, aws_default_security_group.default.id]
+    assign_public_ip = "true"
+
   }
   load_balancer {
     target_group_arn = aws_lb_target_group.dxc_target_group.arn
@@ -141,6 +143,7 @@ resource "aws_lb" "dxc_demo_alb" {
   subnets                    = [aws_subnet.dxc_subnet1.id, aws_subnet.dxc_subnet2.id]
   enable_deletion_protection = false
   enable_http2               = true
+
 }
 
 resource "aws_lb_target_group" "dxc_target_group" {

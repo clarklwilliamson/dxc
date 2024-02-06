@@ -9,3 +9,5 @@ terraform.tfstate.1706813886.backup
 terraform.tfstate.backup
 .terraform/providers/registry.terraform.io/hashicorp/aws/5.34.0/linux_amd64/terraform-provider-aws_v5.34.0_x5
 .terraform.tfstate.lock.info
+demoservicename
+nginx_service
